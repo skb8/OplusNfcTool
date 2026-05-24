@@ -1,0 +1,16 @@
+#!/system/bin/sh
+# Oplus Vendor NFC Tool wrapper
+# Compatible with Magisk / KernelSU
+
+MODDIR="/data/adb/modules/oplus_nfctool"
+JAR="$MODDIR/tools/nfctool.jar"
+
+if [ ! -f "$JAR" ]; then
+    echo "[-] nfctool.jar not found at $JAR"
+    echo "    Build it first (see module README/build.sh) and place into tools/"
+    exit 1
+fi
+
+export CLASSPATH="$JAR"
+
+exec app_process /data/local/tmp/ com.oplus.nfctool.NfcTool "$@"
