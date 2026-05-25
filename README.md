@@ -19,7 +19,8 @@ This tool bypasses OS-level API restrictions to manage secure elements (eSE), co
 ## Requirements
 
 - Android device with root access (**Magisk** or **KernelSU**).
-- An **Oppo, Realme, or OnePlus** device containing the proprietary `com.vendor.nfc.IVendorNfcAdapter` interface inside the system services.
+- An **Oppo, Realme, or OnePlus** (BBK) device containing the proprietary `com.vendor.nfc.IVendorNfcAdapter` interface.
+- **Tested & Verified Chipset:** **NXP SN220T** (found in modern OnePlus/Realme flagship devices).
 
 ## Installation
 
@@ -65,12 +66,23 @@ su -c nfctool
 
 # Get CPLC data from eSE
 su -c nfctool cplc
+# Example Output:
+# 9F7F2A479009DC4703D0430600418613900741042048100000005100000449307D582590020000000000365233
+
+# Get NFC Controller name/info
+su -c nfctool nfcc
+# Example Output:
+# SN220T
 
 # Reset secure element (eSE)
 su -c nfctool ese-reset
+# Example Output:
+# eSE Reset: true
 
 # Emulate custom UID (HCE Type A) - Change DEADBEEF to target UID
 su -c nfctool hce-uid DEADBEEF
+# Example Output:
+# Set HCE Type A Config: true
 
 # Emulate custom UID with custom ATQA and SAK
 su -c nfctool hce-uid DEADBEEF 0004 20
@@ -88,7 +100,12 @@ su -c nfctool share-mode true
 su -c nfctool feature ESE_RESET
 ```
 
-## How It Works (Technically)
+## Technical Details & Background
+
+This utility was developed by reversing the proprietary vendor NFC framework components (typically found in `/system/framework/nfcvendorlib.jar`) on Oppo/Realme/OnePlus devices, which includes:
+- `com.vendor.nfc.VendorNfcAdapter` & `IVendorNfcAdapter` (General vendor control & HCE spoofing)
+- `com.nxp.nfc.NxpNfcAdapter` (NXP-specific extras & Routing)
+- `com.st.android.nfc_extensions.NfcAdapterStExtensions` (STMicroelectronics low-level гейты, пайпы и RF конфигурации)
 
 Instead of relying on proprietary stub libraries at compile time, this utility communicates with the NFC stack purely via IPC.
 
