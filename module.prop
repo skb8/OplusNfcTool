@@ -2,5 +2,5 @@ id=oplus_nfctool
 name=Oplus Vendor NFC Tool
 version=v1.0
 versionCode=1
-author=Pi Assistant
+author=skb8
 description=Console utility to interact with Oplus/Realme vendor NFC framework (IVendorNfcAdapter) via root. Allows reading CPLC, resetting eSE, changing HCE UID, etc. Reboot after install.
